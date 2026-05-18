@@ -1,0 +1,147 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+}
+
+final int API_LEVEL = 35
+
+final String DL_SDK_RELEASE = 'dev-+'
+final String DL_FSM_RELEASE = 'dev-+'
+
+android {
+    namespace 'com.example.testgrantpermission'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.example.testgrantpermission"
+        minSdk 33
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-datalogic-sdk.pro', 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    buildFeatures {
+        compose true
+    }
+}
+
+//pluginManagement {
+//    repositories {
+//        google {
+//            content {
+//                includeGroupByRegex("com\\.android.*")
+//                includeGroupByRegex("com\\.google.*")
+//                includeGroupByRegex("androidx.*")
+//            }
+//        }
+//        mavenCentral()
+//        gradlePluginPortal()
+//    }
+//}
+
+dependencies {
+
+//    compileOnly fileTree(include: ['*.jar'], dir: 'libs') // project path to load local dependencies
+//
+//    final File intermediatesPath = new File(rootProject.projectDir, '../datalogic-intermediates').getCanonicalFile()
+//    compileOnly files("${intermediatesPath}/libs/android-${API_LEVEL}-framework.jar")
+//
+//    /* ##### Begin workspace dependencies ##### */
+//    final String RELEASE_ARTIFACT_PATH = '../../artifacts/release'
+//    final String DEBUG_ARTIFACT_PATH = '../../artifacts/debug'
+//    final File RELEASE_ARTIFACT_FILE = file(RELEASE_ARTIFACT_PATH)
+//    final File DEBUG_ARTIFACT_FILE = file(DEBUG_ARTIFACT_PATH)
+//
+//    if (DEBUG_ARTIFACT_FILE.exists()) {
+//        // external path to load dependencies built in local workspace as release
+//        compileOnly files(new File(DEBUG_ARTIFACT_PATH,'datalogic-definitions/datalogic-definitions.jar'))
+//        compileOnly files(new File(DEBUG_ARTIFACT_PATH,'datalogic-interfaces/datalogic-interfaces.jar'))
+//        compileOnly files(new File(DEBUG_ARTIFACT_PATH,'datalogic-sdk/com.datalogic.device.jar'))
+//        compileOnly files(new File(DEBUG_ARTIFACT_PATH,'datalogic-selfshopping-sdk/com.datalogic.extension.selfshopping.jar'))
+//    } else if (RELEASE_ARTIFACT_FILE.exists()) {
+//        // external path to load dependencies built in local workspace as debug
+//        compileOnly files(new File(RELEASE_ARTIFACT_PATH,'datalogic-definitions/datalogic-definitions.jar'))
+//        compileOnly files(new File(RELEASE_ARTIFACT_PATH,'datalogic-interfaces/datalogic-interfaces.jar'))
+//        compileOnly files(new File(RELEASE_ARTIFACT_PATH,'datalogic-sdk/com.datalogic.device.jar'))
+//        compileOnly files(new File(RELEASE_ARTIFACT_PATH,'datalogic-selfshopping-sdk/com.datalogic.extension.selfshopping.jar'))
+//    } else {
+//        // maven dependencies officially released
+//        compileOnly "com.datalogic.android.common:definitions:${DL_SDK_RELEASE}"
+//        compileOnly "com.datalogic.android.common:interfaces:${DL_SDK_RELEASE}"
+//        compileOnly "com.datalogic.android.common:device:${DL_SDK_RELEASE}"
+//        compileOnly "com.datalogic.android.common:interfaces:${DL_SDK_RELEASE}"
+//        compileOnly 'com.datalogic.android.common:selfshopping:1.8.8'
+//    }
+    /* ##### End workspace dependencies ##### */
+
+    implementation 'com.github.datalogic:datalogic-android-sdk:v1.49'
+
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.androidx.activity.compose
+    implementation platform(libs.androidx.compose.bom)
+    implementation libs.androidx.compose.ui
+    implementation libs.androidx.compose.ui.graphics
+    implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.compose.material3
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation platform(libs.androidx.compose.bom)
+    androidTestImplementation libs.androidx.compose.ui.test.junit4
+    debugImplementation libs.androidx.compose.ui.tooling
+    debugImplementation libs.androidx.compose.ui.test.manifest
+}
+
+// FIX: Configuration of JavaCompile should happen here, not inside preBuild.doLast
+//tasks.withType(JavaCompile).configureEach { task ->
+//    final File intermediatesPath = new File(rootProject.projectDir, '../datalogic-intermediates').getCanonicalFile()
+//    final File frameworkPath = new File(intermediatesPath, "libs/android-${API_LEVEL}-framework.jar")
+//
+//    if (frameworkPath.exists()) {
+//        // Prepend the framework jar to ensure it takes priority over standard Android SDK
+//        options.compilerArgs << "-Xbootclasspath/p:${frameworkPath}"
+//        options.bootstrapClasspath = files(frameworkPath).plus(options.bootstrapClasspath ?: files())
+//    }
+//}
+
+//preBuild {
+//    doLast {
+//        final File intermediatesPath = new File(rootProject.projectDir, '../datalogic-intermediates').getCanonicalFile()
+//        println("[CI/CD] intermediates path is `${intermediatesPath}`")
+//        final File frameworkPath = new File(intermediatesPath, "libs/android-${API_LEVEL}-framework.jar")
+//        println("[CI/CD] framework path is `${frameworkPath}`")
+//        final frameworkFiles = files(frameworkPath)
+//        tasks.withType(JavaCompile) { task ->
+//            println("[CI/CD] fixing task `${task.name}`")
+//            options.compilerArgs += "-Xbootclasspath/p:${frameworkPath}"
+//            options.bootstrapClasspath = frameworkFiles + options.bootstrapClasspath
+//            println("[CI/CD] bootstrap class-path is")
+//            options.bootstrapClasspath.each {println(it) }
+//        }
+//    }
+//}
+
+//configurations.configureEach {
+//    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+//}
